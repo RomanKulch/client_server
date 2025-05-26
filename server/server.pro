@@ -9,8 +9,8 @@ CONFIG += c++17 cmdline
 SOURCES += \
         main.cpp \
         udpServer.cpp \
-        udpServerReader.cpp \
-        udpServerWriter.cpp
+        udpReceiver.cpp \
+        udpSender.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -19,5 +19,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     udpServer.h \
-    udpServerReader.h \
-    udpServerWriter.h
+    udpReceiver.h \
+    udpSender.h

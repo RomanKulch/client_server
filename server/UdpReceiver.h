@@ -1,15 +1,15 @@
-#ifndef UDPSERVERREADER_H
-#define UDPSERVERREADER_H
+#ifndef UdpReceiver_H
+#define UdpReceiver_H
 
 #include <QObject>
 #include <QUdpSocket>
 #include <QNetworkDatagram>
 
-class UdpServerReader : public QObject
+class UdpReceiver : public QObject
 {
     Q_OBJECT
 public:
-    explicit UdpServerReader(QObject *parent = nullptr); // rm default value
+    explicit UdpReceiver(QObject *parent = nullptr); // rm default value
     // void init(quint16 listenPort);
     // void start(quint16 listenPort = 12345);
 
@@ -23,8 +23,7 @@ signals:
     void handleMsg(QNetworkDatagram datagram);
 
 private:
-    QUdpSocket* m_rxSocket;
-    // QUdpSocket* m_txSocket;
+    QUdpSocket* mRxSocket;
 };
 
-#endif // UDPSERVERREADER_H
+#endif // UdpReceiver_H

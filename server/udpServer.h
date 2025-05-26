@@ -2,8 +2,9 @@
 #define UDPSERVER_H
 
 #include <QObject>
-#include "udpServerReader.h"
-#include "udpServerWriter.h"
+#include <QThread>
+#include "UdpReceiver.h"
+#include "UdpSender.h"
 
 class UdpServer : public QObject
 {
@@ -11,7 +12,17 @@ class UdpServer : public QObject
 public:
     explicit UdpServer(QObject *parent = nullptr);
 
+    void init();
+    void start();
+
 signals:
+
+private:
+    UdpReceiver mReceiver; // UdpReceiver
+    UdpSender mSender; // UdpSender
+
+    QThread mReadThread;
+    QThread mWriteThread;
 };
 
 #endif // UDPSERVER_H
