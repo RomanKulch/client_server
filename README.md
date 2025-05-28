@@ -4,6 +4,11 @@
 
 ## Client Message Protocol
 
+|.........................Message.....................|  
+|protocol version|version| value |  
+|..........1 byte..........|1 byte |8 bytes|  
+<br>Total message size: 10 bytes<br>
+
 | Field             | Size     | Description                                                                 |
 |------------------|----------|-----------------------------------------------------------------------------|
 | protocol version | 1 byte   | Protocol version of the client                                              |
@@ -17,6 +22,11 @@
 ---
 
 ## Server Message Protocol
+
+|...................................................Message...............................................|  
+|status|protocol version|total size|chunk number| payload |  
+|1 byte|.........1 byte...........| 4 bytes  |........4 bytes........| ? bytes |  
+<br>Total message size: 10 bytes<br>
 
 | Field             | Size     | Description                                                                 |
 |------------------|----------|-----------------------------------------------------------------------------|
