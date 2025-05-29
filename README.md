@@ -4,48 +4,43 @@
 
 ## Client Message Protocol
 
-|.........................Message.....................|  
-|protocol version|version| value |  
-|..........1 byte..........|1 byte |8 bytes|  
-<br>Total message size: 10 bytes<br>
+<br>Header size: 2 bytes  
+Payload size: 8 bytes  
+Total size: 10 bytes<br>
 
-| Field             | Size     | Description                                                                 |
-|------------------|----------|-----------------------------------------------------------------------------|
-| protocol version | 1 byte   | Protocol version of the client                                              |
-| version          | 1 byte   | Represents `QDataStream::version()`; both client and server must match it   |
-| value            | 8 bytes  | A double value                                                              |
+| Field      | Size    | Description                    |
+|------------|---------|--------------------------------|
+| version    | 1 byte  | Protocol version of the client |
+| reserve    | 1 bytes | Reserve                        |
+| value      | 8 bytes | value being sent               |
 
-- **`protocol version`**: Identifies the version of the communication protocol used by the client.  
-- **`version`**: Represents the `QDataStream::version()`. The client and server must use the same version to ensure that transferred data is deserialized correctly.  
+- **`version`**: Identifies the version of the communication protocol used by the client.  
 - **`value`**: A `double` value.
 
 ---
 
 ## Server Message Protocol
 
-|...................................................Message...............................................|  
-|status|protocol version|total size|chunk number| payload |  
-|1 byte|.........1 byte...........| 4 bytes  |........4 bytes........| ? bytes |  
-<br>Total message size: 10 bytes<br>
+<br>Header size: 8 bytes  
+Payload size: ? bytes  
+Total size: ? bytes<br><br>
 
-| Field             | Size     | Description                                                                 |
-|------------------|----------|-----------------------------------------------------------------------------|
-| status           | 1 byte   | `0` for error, `1` for success                                               |
-| protocol version | 1 byte   | Protocol version of the server                                              |
-| total size       | 4 bytes  | Total size of all double values being sent                                  |
-| chunk number     | 4 bytes  | Sequence number of the message chunk                                        |
-| payload          | ? bytes  | Array of `double` values or an error message                                |
+| Field            | Size    | Description                                             |
+|------------------|---------|---------------------------------------------------------|
+| type             | 1 byte  | paylod type: `0` it's error string, `1` array of double |
+| protocol version | 1 byte  | Protocol version of the server                          |
+| total size       | 4 bytes | Total size (in bytes) of all values being sent          |
+| chunk number     | 2 bytes | Sequence number of the message chunk                    |
+| payload          | ? bytes | Array of `double` values or an error message            |
 
-- **`status`**:  
+- **`type`**:  
   - `0`: Indicates an error message.  
-  - `1`: Indicates successful data transmission.  
+  - `1`: Type of the value is array of double.  
 - **`protocol version`**: Identifies the version of the communication protocol used by the server.  
 - **`total size`**: The total size (in bytes) of the `double` values sent by the server.  
 - **`chunk number`**: A number representing the sequence of the message.  
 - **`payload`**:  
-  - If `status` is `1`, contains an array of `double` values.  
-  - If `status` is `0`, contains an error message and the protocol version of the server.
+  - If `type` is `1`, contains an array of `double` values.  
+  - If `type` is `0`, contains an error message and the protocol version of the server.
 
 ---
-
-Make sure both client and server use compatible protocol and `QDataStream` versions to avoid deserialization issues.

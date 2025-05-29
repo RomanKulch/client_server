@@ -1,0 +1,10 @@
+{
+	"protocol_version":  {
+		"major_version": 1,
+		"minor_version": 0
+	},
+	"version": 22,
+    "payload": {
+        "num_elements": 10
+    }
+}

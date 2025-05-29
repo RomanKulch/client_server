@@ -14,11 +14,9 @@ public:
 signals:
 
 public slots:
-    // void read();
-    void write(QNetworkDatagram datagram); // rename send
+    void send(QSharedPointer<QNetworkDatagram> pDatagram);
 
 private:
-    // QUdpSocket* m_rxSocket;
     QUdpSocket* mTxSocket;
 };
 
