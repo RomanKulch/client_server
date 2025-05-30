@@ -25,17 +25,17 @@ int main(int argc, char *argv[]) {
 
     QStringList arguments = QCoreApplication::arguments();
 
-    if (arguments.empty()) {
-        qDebug() << "No path to the protol file";
-        return 1;
-    }
+    // if (arguments.empty()) { // fix it >= 1
+    //     qDebug() << "No path to the protol file";
+    //     return 1;
+    // }
 
-    const QString filePath = arguments[1];
-    QByteArray content;
-    if (!readFile(filePath, content)) {
-        qDebug() << "Reading file failed";
-        return 1;
-    }
+    // const QString filePath = arguments[1]; //
+    // QByteArray content;
+    // if (!readFile(filePath, content)) {
+    //     qDebug() << "Reading file failed";
+    //     return 1;
+    // }
 
     UdpServer server{};
     server.init();

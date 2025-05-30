@@ -38,11 +38,14 @@ void UdpServer::dispatcher(QNetworkDatagram request) {
     qDebug() << "UdpServer::dispatcher id:" << std::hash<std::thread::id>{}(std::this_thread::get_id());
     qDebug() << "dispatcher:" << request.data();
 
+    // make a func
     ClientData clientData{};
     if (false == deserializeClientRequest(request.data(), clientData)) {
         qDebug() << "request type failed failed";
         return;
     }
+    clientData.addr = request.senderAddress();
+    clientData.port = request.senderPort();
 
     if (clientData.version < kProtocolVersion) {
         sendError(clientData);
@@ -64,7 +67,7 @@ bool UdpServer::deserializeClientRequest(const QByteArray& val, ClientData& clie
 
     clientData.version = val[kVersionIndex];
     clientData.value = val[kValueIndex];
-
+    qDebug() << "version: " << clientData.version << ", val: " << clientData.value;
     return true;
 }
 
@@ -89,7 +92,7 @@ void UdpServer::sendChunkByChunk(const ClientData& clientData, const uint8_t msg
 
     Header header{msgType, kProtocolVersion, 0, dataSizeBytes};
     const uint16_t totalChunks = (dataSizeBytes + kChunkSize - 1) / kChunkSize;
-
+// add byte order
     for (uint16_t i = 0; i < totalChunks; ++i) {
         header.chunkNum = i;
 
@@ -105,9 +108,10 @@ void UdpServer::sendChunkByChunk(const ClientData& clientData, const uint8_t msg
 
         auto pOutputData = QSharedPointer<QNetworkDatagram>::create(std::move(chunk), clientData.addr, clientData.port);
         emit sendMsg(pOutputData);
+        qDebug() << "chunk.size: " << chunk.size();
 
-        // QThread::usleep(100); // 0.1ms
+        QThread::usleep(100); // 0.1ms
     }
 
-    qDebug() << "Sent" << totalChunks << "chunks, total size:" << dataSizeBytes << "bytes";
+    qDebug() << "Sent" << totalChunks << "chunks, payload size:" << dataSizeBytes << "bytes";
 }

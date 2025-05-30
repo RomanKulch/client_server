@@ -20,10 +20,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    constants.hpp \
     jsonFileParser.hpp \
     randomUniqueArray.hpp \
-    types.hpp \
     udpServer.h \
     udpReceiver.h \
     udpSender.h
+
+INCLUDEPATH += ../common
