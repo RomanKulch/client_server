@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <QDataStream>
 
-struct RequestHeader {
+struct RequestHeader { // rm?
 	uint8_t version;
 	uint8_t reserve;
 };
@@ -20,7 +20,7 @@ struct ResponseHeader {
 };
 
 constexpr uint8_t kMinNumArguments = 2;
-constexpr uint32_t kNumElements = 1000;
+constexpr uint32_t kNumElements = 1000000;
 constexpr uint16_t kChunkSize = 1400;
 
 constexpr uint8_t kRequestSize = 10;

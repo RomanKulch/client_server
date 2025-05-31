@@ -17,7 +17,7 @@ public slots:
     void send(QSharedPointer<QNetworkDatagram> pDatagram);
 
 private:
-    QUdpSocket* mTxSocket;
+    QUdpSocket* m_txSocket;
 };
 
 #endif // UdpSender_H

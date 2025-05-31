@@ -2,17 +2,17 @@ QT = core network
 
 CONFIG += c++17 cmdline
 
-# You can make your code fail to compile if it uses deprecated APIs.
-# In order to do so, uncomment the following line.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+COMMON_DIR = ../common
 
 SOURCES += \
-        jsonFileParser.cpp \
+        # jsonFileParser.cpp \
         main.cpp \
         randomUniqueArray.cpp \
+        requestHandler.cpp \
         udpServer.cpp \
         udpReceiver.cpp \
-        udpSender.cpp
+        udpSender.cpp \
+        $$COMMON_DIR/tools.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -20,10 +20,13 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    jsonFileParser.hpp \
+    # jsonFileParser.hpp \
     randomUniqueArray.hpp \
-    udpServer.h \
-    udpReceiver.h \
-    udpSender.h
+    requestHandler.hpp \
+    udpReceiver.hpp \
+    udpSender.hpp \
+    $$COMMON_DIR/tools.hpp \
+    $$COMMON_DIR/constants.hpp \
+    udpServer.hpp
 
 INCLUDEPATH += ../common

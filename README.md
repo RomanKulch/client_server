@@ -22,16 +22,16 @@ Total size: 10 bytes<br>
 ## Server Message Protocol
 
 <br>Header size: 8 bytes  
-Payload size: ? bytes  
-Total size: ? bytes<br><br>
+Payload max size: 1400 bytes  
+Max total size: 1408 bytes<br><br>
 
-| Field            | Size    | Description                                             |
-|------------------|---------|---------------------------------------------------------|
-| type             | 1 byte  | paylod type: `0` it's error string, `1` array of double |
-| protocol version | 1 byte  | Protocol version of the server                          |
-| total size       | 4 bytes | Total size (in bytes) of all values being sent          |
-| chunk number     | 2 bytes | Sequence number of the message chunk                    |
-| payload          | ? bytes | Array of `double` values or an error message            |
+| Field            | Size       | Description                                             |
+|------------------|------------|---------------------------------------------------------|
+| type             | 1 byte     | paylod type: `0` it's error string, `1` array of double |
+| protocol version | 1 byte     | Protocol version of the server                          |
+| total size       | 4 bytes    | Total size (in bytes) of all values being sent          |
+| chunk number     | 2 bytes    | Sequence number of the message chunk                    |
+| payload          | 1400 bytes | Array of bytes                                          |
 
 - **`type`**:  
   - `0`: Indicates an error message.  

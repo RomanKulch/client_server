@@ -1,19 +1,14 @@
-#include "UdpSender.h"
+#include "UdpSender.hpp"
 #include <QDebug>
-// #include <thread> // rm this
 
 UdpSender::UdpSender(QObject *parent) : QObject{parent} {
-    mTxSocket = new QUdpSocket(this);
+    m_txSocket = new QUdpSocket(this);
 }
 
 void UdpSender::send(QSharedPointer<QNetworkDatagram> pDatagram) {
-    // qDebug() << "write:" << pDatagram->data();
-    // qDebug() << "UdpSender::write id:" << std::hash<std::thread::id>{}(std::this_thread::get_id());
-    qint64 bytesSent = mTxSocket->writeDatagram(*pDatagram);
+    qint64 bytesSent = m_txSocket->writeDatagram(*pDatagram);
 
-    if (bytesSent != -1) {
-        qDebug() << "Msg sent";
-    } else {
-        qDebug() << "Error send msg!";
+    if (bytesSent == -1) {
+        qWarning() << "Error send msg!";
     }
 }
