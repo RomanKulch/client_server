@@ -15,7 +15,6 @@ bool Tools::getFileContent(QByteArray& content) {
     }
 
     const QString filePath = arguments[kFilePathIndex];
-    // QByteArray content;
     if (!readFile(filePath, content)) {
         qDebug() << "Reading file failed";
         return false;

@@ -22,9 +22,10 @@ private:
     void saveToBinaryFile(const QString& filename); // const??
     size_t getPayloadSize(const QByteArray& data) const;
     const char* getPayloadStart(const QByteArray& data) const;
-    bool validateHashSum(const QByteArray& data, ResponseHeader& header) const;
+    bool validateHashSum(const QByteArray& data, uint32_t expectedHash) const;
 
-    QVector<double> mValue;
+    QVector<double> m_value{};
+    bool m_isReserveMemory{false};
 };
 
 #endif // RESPONSEHANDLER_H

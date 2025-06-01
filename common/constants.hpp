@@ -4,12 +4,14 @@
 #include <cstdint>
 #include <QDataStream>
 
+constexpr uint32_t kNumElements = 1000000;
+
 struct RequestHeader {
     uint8_t version;
     uint8_t reserve;
 };
 
-constexpr decltype(RequestHeader::version) kProtocolVersion = 1;
+constexpr decltype(RequestHeader::version) kProtocolVersion = 3;
 constexpr decltype(RequestHeader::reserve) kReserve = 0;
 
 struct ResponseHeader {
@@ -20,7 +22,6 @@ struct ResponseHeader {
     uint32_t hashMd5;
 };
 
-constexpr uint32_t kNumElements = 1000;
 constexpr uint8_t kMinNumArguments = 2;
 constexpr uint16_t kChunkSize = 1400;
 

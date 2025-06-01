@@ -27,7 +27,7 @@ private:
     void deserializeClientRequest(const QByteArray& val);
     void sendResponse();
     void sendError();
-    void sendChunkByChunk(const uint8_t msgType, const uint32_t dataSizeBytes, const char* rawData);
+    void sendChunkByChunk(const uint8_t msgType, QByteArrayView rawData);
 
     ClientData m_clientData{};
     bool m_isValidRequest;

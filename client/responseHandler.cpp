@@ -18,7 +18,7 @@ void ResponseHandler::responseHandler(QSharedPointer<QByteArray> msg) {
         return;
     }
 
-    if (false == validateHashSum(*msg, header)) {
+    if (false == validateHashSum(*msg, header.hashMd5)) {
         qWarning() << "Wrong data hash sum";
         return;
     }
@@ -64,18 +64,19 @@ void ResponseHandler::processValue(const QByteArray& data, ResponseHeader& heade
     }
 
     const qsizetype expectedSize = header.totalByteSize / sizeof(double);
-    if (header.chunkNum == 0) { // !!
-        mValue.reserve(expectedSize);
+    if (false == m_isReserveMemory) {
+        m_value.reserve(expectedSize);
+        m_isReserveMemory = true;
     }
 
     const double* doubleData = reinterpret_cast<const double*>(getPayloadStart(data));
     unsigned doubleCount = getPayloadSize(data) / sizeof(double);
 
     QVector<double> package(doubleData, doubleData + doubleCount);
-    mValue.append(std::move(package));
+    m_value.append(std::move(package));
 
-    if (mValue.size() == expectedSize) {
-        std::sort(mValue.begin(), mValue.end());
+    if (m_value.size() == expectedSize) {
+        std::sort(m_value.begin(), m_value.end());
         const QString fileName = "doubleArr";
         saveToBinaryFile(fileName);
     }
@@ -88,13 +89,13 @@ void ResponseHandler::saveToBinaryFile(const QString& filename) {
         return;
     }
 
-    if (!mValue.isEmpty()) {
+    if (!m_value.isEmpty()) {
         qint64 bytesWritten = file.write(
-            reinterpret_cast<const char*>(mValue.constData()),
-            mValue.size() * sizeof(double)
+            reinterpret_cast<const char*>(m_value.constData()),
+            m_value.size() * sizeof(double)
             );
 
-        const qint64 valueSize = mValue.size() * sizeof(double);
+        const qint64 valueSize = m_value.size() * sizeof(double);
         if (bytesWritten != valueSize) {
             qWarning() << "Failed to write all data";
         }
@@ -113,7 +114,7 @@ const char* ResponseHandler::getPayloadStart(const QByteArray& data) const {
     return (data.constData() + sizeof(ResponseHeader));
 }
 
-bool ResponseHandler::validateHashSum(const QByteArray& data, ResponseHeader& header) const {
+bool ResponseHandler::validateHashSum(const QByteArray& data, uint32_t expectedHash) const {
     QByteArrayView dataOnly(getPayloadStart(data), getPayloadSize(data));
-    return Tools::getHashSum(dataOnly) == header.hashMd5;
+    return Tools::getHashSum(dataOnly) == expectedHash;
 }
