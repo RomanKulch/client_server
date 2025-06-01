@@ -80,9 +80,7 @@ void RequestHandler::sendChunkByChunk(const uint8_t msgType, QByteArrayView rawD
         auto pOutputData = QSharedPointer<QNetworkDatagram>::create(std::move(chunk), m_clientData.addr, m_clientData.port);
         emit sendMsg(pOutputData);
 
-        qDebug() << "";
-        // fot test purpose
-        // QThread::usleep(1);
+        QThread::usleep(1);
     }
 
     qDebug() << "\nSent" << totalChunks << "chunks, payload size:" << dataSizeBytes << "bytes";

@@ -1,4 +1,4 @@
-#include "UdpSender.hpp"
+#include "udpSender.hpp"
 #include <QDebug>
 
 UdpSender::UdpSender(QObject *parent) : QObject{parent} {

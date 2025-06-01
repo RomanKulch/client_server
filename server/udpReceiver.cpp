@@ -1,4 +1,4 @@
-#include "UdpReceiver.hpp"
+#include "udpReceiver.hpp"
 #include <QDebug>
 
 UdpReceiver::UdpReceiver(QObject *parent) : QObject{parent} {
