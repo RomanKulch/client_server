@@ -45,12 +45,42 @@ Max total size: 1412 bytes<br><br>
   - If `type` is `0`, contains an error message and the protocol version of the server.
 
 ---
+## Build client
+Go to the client dir:
+`cd client`
 
-## Run an app
+make a build dir:
+`mkdir build`
+
+go to build dir:
+`cd build`
+
+run gen makefile:
+`qmake6 ../client.pro`
+
+build:
+`make`
+
+## Build server
+Go to the server dir:
+`cd server`
+
+make a build dir:
+`mkdir build`
+
+go to build dir:
+`cd build`
+
+run gen makefile:
+`qmake6 ../server.pro`
+
+build:
+`make`
+
+## Run client
 To run an app, it's necessary to add a path to a config.json file
 
-Example:
+`./client ../config.json`
 
-`./server ../../config.json`
-
-`./client ~/client/config.json`
+## Run server
+`./server ../config.json`
