@@ -1,7 +1,8 @@
 #include "requestHandler.hpp"
 #include <QDebug>
 #include <QThread>
-#include <constants.hpp>
+#include "constants.hpp"
+#include "tools.hpp"
 #include "randomUniqueArray.hpp"
 
 RequestHandler::RequestHandler(QNetworkDatagram&& request)
@@ -58,21 +59,22 @@ void RequestHandler::sendError() {
 }
 
 void RequestHandler::sendChunkByChunk(const uint8_t msgType, const uint32_t dataSizeBytes, const char* rawData) {
-    ResponseHeader header{msgType, kProtocolVersion, 0, dataSizeBytes};
+    ResponseHeader header{msgType, kProtocolVersion, 0, dataSizeBytes, 0};
     const uint16_t totalChunks = (dataSizeBytes + kChunkSize - 1) / kChunkSize;
 
     for (uint16_t i = 0; i < totalChunks; ++i) {
-        header.chunkNum = i;
-
         const uint32_t startByte = static_cast<uint32_t>(i) * kChunkSize;
         const uint32_t remainingBytes = dataSizeBytes - startByte;
         const uint16_t currentChunkSize = static_cast<uint16_t>(qMin(static_cast<uint32_t>(kChunkSize), remainingBytes));
 
         QByteArray chunk;
-        chunk.reserve(sizeof(ResponseHeader) + currentChunkSize);
+        QByteArrayView dataOnly(rawData + startByte, currentChunkSize);
+        header.hashMd5 = Tools::getHashSum(dataOnly);
+        header.chunkNum = i;
 
+        chunk.reserve(sizeof(ResponseHeader) + currentChunkSize);
         chunk.append(reinterpret_cast<const char*>(&header), sizeof(ResponseHeader));
-        chunk.append(rawData + startByte, currentChunkSize);
+        chunk.append(dataOnly);
 
         auto pOutputData = QSharedPointer<QNetworkDatagram>::create(std::move(chunk), m_clientData.addr, m_clientData.port);
         emit sendMsg(pOutputData);

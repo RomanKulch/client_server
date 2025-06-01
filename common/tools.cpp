@@ -2,6 +2,8 @@
 #include <QFile>
 #include <QDebug>
 #include <QCoreApplication>
+#include <QJsonDocument>
+#include <QCryptographicHash>
 #include <constants.hpp>
 
 bool Tools::getFileContent(QByteArray& content) {
@@ -34,4 +36,31 @@ bool Tools::readFile(const QString &filePath, QByteArray& content) {
     file.close();
 
     return true;
+}
+
+bool Tools::getJsonObject(const QByteArray& content, QJsonObject& jsonObj) {
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(content);
+    if (jsonDoc.isNull()) {
+        qDebug() << "Invalid JSON";
+        return false;
+    }
+
+    jsonObj = jsonDoc.object();
+    return true;
+}
+
+bool Tools::isValidPort(quint16 port) {
+    return port >= 1;
+}
+
+uint32_t Tools::getHashSum(QByteArrayView data) {
+    QByteArray checksum = QCryptographicHash::hash(data, QCryptographicHash::Md5);
+    uint32_t hashSum = 0;
+    if (static_cast<uint32_t>(checksum.size()) >= sizeof(hashSum)) {
+        QDataStream stream(checksum.left(sizeof(hashSum)));
+        stream.setByteOrder(kByteOrder);
+        stream >> hashSum;
+    }
+
+    return hashSum;
 }

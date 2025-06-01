@@ -1,6 +1,8 @@
 #include "responseHandler.hpp"
 #include <QDebug>
 #include <QFile>
+#include <QCryptographicHash>
+#include "tools.hpp"
 
 ResponseHandler::ResponseHandler(QObject *parent)
     : QObject{parent}
@@ -13,6 +15,11 @@ void ResponseHandler::responseHandler(QSharedPointer<QByteArray> msg) {
 
     ResponseHeader header;
     if (false == deserializeHeader(*msg, header)) {
+        return;
+    }
+
+    if (false == validateHashSum(*msg, header)) {
+        qWarning() << "Wrong data hash sum";
         return;
     }
 
@@ -38,6 +45,7 @@ bool ResponseHandler::deserializeHeader(const QByteArray& data, ResponseHeader& 
     stream >> header.version;
     stream >> header.chunkNum;
     stream >> header.totalByteSize;
+    stream >> header.hashMd5;
     return true;
 }
 
@@ -56,7 +64,7 @@ void ResponseHandler::processValue(const QByteArray& data, ResponseHeader& heade
     }
 
     const qsizetype expectedSize = header.totalByteSize / sizeof(double);
-    if (header.chunkNum == 0) {
+    if (header.chunkNum == 0) { // !!
         mValue.reserve(expectedSize);
     }
 
@@ -103,4 +111,9 @@ size_t ResponseHandler::getPayloadSize(const QByteArray& data) const {
 
 const char* ResponseHandler::getPayloadStart(const QByteArray& data) const {
     return (data.constData() + sizeof(ResponseHeader));
+}
+
+bool ResponseHandler::validateHashSum(const QByteArray& data, ResponseHeader& header) const {
+    QByteArrayView dataOnly(getPayloadStart(data), getPayloadSize(data));
+    return Tools::getHashSum(dataOnly) == header.hashMd5;
 }

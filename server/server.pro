@@ -5,7 +5,6 @@ CONFIG += c++17 cmdline
 COMMON_DIR = ../common
 
 SOURCES += \
-        # jsonFileParser.cpp \
         main.cpp \
         randomUniqueArray.cpp \
         requestHandler.cpp \
@@ -20,7 +19,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    # jsonFileParser.hpp \
     randomUniqueArray.hpp \
     requestHandler.hpp \
     udpReceiver.hpp \

@@ -9,7 +9,7 @@ class UdpReceiver : public QObject
 {
     Q_OBJECT
 public:
-    explicit UdpReceiver(QObject *parent = nullptr); // rm default value
+    explicit UdpReceiver(QObject *parent = nullptr);
 
 public slots:
     void start(quint16 listenPort);

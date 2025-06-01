@@ -21,9 +21,9 @@ Total size: 10 bytes<br>
 
 ## Server Message Protocol
 
-<br>Header size: 8 bytes  
+<br>Header size: 12 bytes  
 Payload max size: 1400 bytes  
-Max total size: 1408 bytes<br><br>
+Max total size: 1412 bytes<br><br>
 
 | Field            | Size       | Description                                             |
 |------------------|------------|---------------------------------------------------------|
@@ -31,6 +31,7 @@ Max total size: 1408 bytes<br><br>
 | protocol version | 1 byte     | Protocol version of the server                          |
 | total size       | 4 bytes    | Total size (in bytes) of all values being sent          |
 | chunk number     | 2 bytes    | Sequence number of the message chunk                    |
+| hash sum         | 4 bytes    | Paylod's hash sum                                       |
 | payload          | 1400 bytes | Array of bytes                                          |
 
 - **`type`**:  

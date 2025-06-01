@@ -6,7 +6,6 @@
 #include <QThread>
 #include <memory>
 #include <responseHandler.hpp>
-// #include <QHostAddress>
 
 class Client : public QObject
 {
@@ -25,7 +24,6 @@ private:
     std::unique_ptr<QUdpSocket> m_pSocket;
     QThread mHandlerThread;
     ResponseHandler mRespHandler;
-    // QUdpSocket mUdpSocket;
 };
 
 #endif // CLIENT_HPP

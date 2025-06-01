@@ -12,7 +12,7 @@ class UdpServer : public QObject {
 public:
     explicit UdpServer(QObject *parent = nullptr);
 
-    void init();
+    void init(quint16 port);
     void start();
 
 public slots:

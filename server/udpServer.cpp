@@ -8,17 +8,17 @@
 
 UdpServer::UdpServer(QObject *parent)
     : QObject{parent}
-    , m_pThreadPool(new QThreadPool(this)){} // make ptrs for others
+    , m_pThreadPool(new QThreadPool(this)){}
 
-void UdpServer::init() {
+void UdpServer::init(quint16 port) {
     m_receiver.moveToThread(&m_readThread);
     m_sender.moveToThread(&m_writeThread);
     m_pThreadPool->setMaxThreadCount(QThread::idealThreadCount());
 
-    QObject::connect(&m_readThread, &QThread::started, [this]() {
-        constexpr quint16 port = 12347;
-        QMetaObject::invokeMethod(&m_receiver, "start", Q_ARG(quint16, port));
-    });
+    QObject::connect(&m_readThread, &QThread::started, this,
+                     [this, port]() {
+                         QMetaObject::invokeMethod(&m_receiver, "start", Q_ARG(quint16, port));
+                     }, Qt::QueuedConnection);
 
     QObject::connect(&m_readThread, &QThread::finished, &m_receiver, &QObject::deleteLater);
     QObject::connect(&m_writeThread, &QThread::finished, &m_sender, &QObject::deleteLater);

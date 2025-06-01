@@ -1,13 +1,7 @@
 #include "randomUniqueArray.hpp"
 #include <QDebug>
-#include <QDataStream>
-#include <QIODevice>
 #include <QRandomGenerator>
 #include <QSet>
-
-RandomUniqueArray::RandomUniqueArray(QObject *parent)
-    : QObject{parent}
-{}
 
 QVector<double> RandomUniqueArray::generateUniqueValues(const double range, const quint32 count) {
     QSet<double> seen;

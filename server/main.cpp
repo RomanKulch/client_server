@@ -1,51 +1,53 @@
 #include <QCoreApplication>
-#include <QFile>
 #include <QDebug>
 #include "udpServer.hpp"
+#include <tools.hpp>
 
-// #include "types.hpp"
-// #include "jsonFileParser.hpp"
+bool parseServerConfig(const QByteArray& content, quint16& port) {
+    const char* serverPort = "server_port";
 
-bool readFile(const QString &filePath, QByteArray& content) {
-    QFile file(filePath);
-
-    if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "File doesn't exist: " << filePath;
+    QJsonObject jsonObj;
+    if (false == Tools::getJsonObject(content, jsonObj)) {
         return false;
     }
 
-    content = file.readAll();
-    file.close();
+    if (jsonObj[serverPort].type() == QJsonValue::Null || jsonObj[serverPort].type() == QJsonValue::Undefined) {
+        qDebug() << "Port attribute doesn't exist";
+        return false;
+    }
 
+    if (false == jsonObj[serverPort].isDouble()) {
+        qDebug() << "Port attribute has wrong type";
+        return false;
+    }
+
+    port = jsonObj[serverPort].toInt();
     return true;
 }
 
 int main(int argc, char *argv[]) {
     QCoreApplication app(argc, argv);
 
-    QStringList arguments = QCoreApplication::arguments();
+    QByteArray configServerContent;
+    if (false == Tools::getFileContent(configServerContent)) {
+        qDebug() << "Failed to read config file";
+        return -1;
+    }
 
-    // if (arguments.empty()) { // fix it >= 1
-    //     qDebug() << "No path to the protol file";
-    //     return 1;
-    // }
+    quint16 serverPort = 0;
+    if (false == parseServerConfig(configServerContent, serverPort)) {
+        qDebug() << "Failed to parse server config file";
+        return -1;
+    }
 
-    // const QString filePath = arguments[1]; //
-    // QByteArray content;
-    // if (!readFile(filePath, content)) {
-    //     qDebug() << "Reading file failed";
-    //     return 1;
-    // }
+    if (false == Tools::isValidPort(serverPort)) {
+        qDebug() << "Server port has wrong value";
+        return -1;
+    }
 
     UdpServer server{};
-    server.init();
+    server.init(serverPort);
     server.start();
-
-    // QObject::connect(&app, &QCoreApplication::aboutToQuit, &readThread, &QThread::quit);
-    // QObject::connect(&app, &QCoreApplication::aboutToQuit, &writeThread, &QThread::quit);
-
-
-    // TODO: terminate() -> QObject::connect(&app, &QCoreApplication::aboutToQuit, &readThread, &QThread::quit);?????
 
     return app.exec();
 }

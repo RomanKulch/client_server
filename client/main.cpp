@@ -1,8 +1,6 @@
 #include <QCoreApplication>
 #include <QThread>
 #include <QDebug>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include "client.hpp"
 #include <tools.hpp>
 
@@ -25,13 +23,10 @@ bool parseClientConfig(const QByteArray& content, ClientConfig& config) {
         }
     };
 
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(content);
-    if (jsonDoc.isNull()) {
-        qDebug() << "Invalid JSON";
+    QJsonObject jsonObj;
+    if (false == Tools::getJsonObject(content, jsonObj)) {
         return false;
     }
-
-    QJsonObject jsonObj = jsonDoc.object();
 
     attributeValid(jsonObj[serverPort]);
     attributeValid(jsonObj[valueToSend]);
@@ -54,15 +49,15 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    QByteArray content;
-    if (false == Tools::getFileContent(content)) {
+    QByteArray configClientContent;
+    if (false == Tools::getFileContent(configClientContent)) {
         qDebug() << "Failed to read config file";
         return -1;
     }
 
     ClientConfig config;
-    if (false == parseClientConfig(content, config)) {
-        qDebug() << "Failed to parse client config";
+    if (false == parseClientConfig(configClientContent, config)) {
+        qDebug() << "Failed to parse client config file";
         return -1;
     }
 
