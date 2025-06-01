@@ -39,7 +39,8 @@ Max total size: 1412 bytes<br><br>
   - `1`: Type of the value is array of double.  
 - **`protocol version`**: Identifies the version of the communication protocol used by the server.  
 - **`total size`**: The total size (in bytes) of the `double` values sent by the server.  
-- **`chunk number`**: A number representing the sequence of the message.  
+- **`chunk number`**: A number representing the sequence of the message.
+- **`hash sum`**: md5 paylod's hash sum
 - **`payload`**:  
   - If `type` is `1`, contains an array of `double` values.  
   - If `type` is `0`, contains an error message and the protocol version of the server.
