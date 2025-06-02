@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 #include <QThread>
 #include <QDebug>
+#include <QTimer>
 #include "client.hpp"
 #include <tools.hpp>
 
@@ -66,10 +67,13 @@ int main(int argc, char *argv[])
 
     client.moveToThread(&clientThread);
 
-    QObject::connect(&clientThread, &QThread::started, [&client, &config]() {
-        QMetaObject::invokeMethod(&client, "start",
-            Qt::QueuedConnection, Q_ARG(QString, config.serverAddr),
-            Q_ARG(quint16, config.serverPort), Q_ARG(double, config.valueToSend));
+    QObject::connect(&clientThread, &QThread::started, &client, [&client, &config]() {
+        constexpr uint16_t delayMs = 3000;
+        QTimer::singleShot(delayMs, [&client, &config]() {
+            QMetaObject::invokeMethod(&client, "start",
+                                      Qt::QueuedConnection, Q_ARG(QString, config.serverAddr),
+                                      Q_ARG(quint16, config.serverPort), Q_ARG(double, config.valueToSend));
+        });
     });
 
     QObject::connect(&clientThread, &QThread::finished, &client, &QObject::deleteLater);
